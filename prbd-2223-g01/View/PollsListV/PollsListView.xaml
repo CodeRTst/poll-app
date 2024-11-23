@@ -1,0 +1,69 @@
+﻿<f:UserControlBase
+             xmlns:f="clr-namespace:PRBD_Framework;assembly=PRBD_Framework"
+             x:Class="MyPoll.View.PollsListView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MyPoll.View"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:vm="clr-namespace:MyPoll.ViewModel.PollsListVm"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <vm:PollsListViewModel x:Name="vm"/>
+    </UserControl.DataContext>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" FontSize="14" />
+            <Button Content="Clear" Grid.Column="1" Command="{Binding ClearFilter}" Margin="5,0,0,0" />
+        </Grid>
+        <ListView x:Name="listView" Grid.Row="1" ItemsSource="{Binding Polls}" BorderBrush="Transparent" SelectionMode="Single" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding DisplayPoll}"
+                CommandParameter="{Binding ElementName=listView, Path=SelectedItem}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel/>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <local:PollCardView/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="btnNewPoll" Content="New Poll" Command="{Binding NewPollButton}" Width="60" HorizontalAlignment="Left"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Border Background="DarkGray" Width="30" Height="15"/>
+                <Label Content="Unanswered" Margin="0,0,10,0"/>
+                <Border Background="LightGreen" Width="30" Height="15"/>
+                <Label Content="Answered" Margin="0,0,10,0"/>
+                <Border Background="Pink" Width="30" Height="15"/>
+                <Label Content="Closed"/>
+            </StackPanel>
+
+        </Grid>
+
+    </Grid>
+
+</f:UserControlBase>
